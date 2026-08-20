@@ -1,8 +1,10 @@
 import {
   createUserWithEmailAndPassword,
+  GoogleAuthProvider,
   onAuthStateChanged,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
+  signInWithPopup,
   signOut as firebaseSignOut,
   updateProfile,
   type User,
@@ -24,9 +26,12 @@ interface AuthContextValue {
   loading: boolean
   signIn: (email: string, password: string) => Promise<void>
   signUp: (email: string, password: string, displayName: string) => Promise<void>
+  signInWithGoogle: () => Promise<void>
   signOut: () => Promise<void>
   resetPassword: (email: string) => Promise<void>
 }
+
+const googleProvider = new GoogleAuthProvider()
 
 const AuthContext = createContext<AuthContextValue | null>(null)
 
@@ -70,6 +75,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [],
   )
 
+  const signInWithGoogle = useCallback(async () => {
+    try {
+      await signInWithPopup(auth, googleProvider)
+    } catch (error) {
+      throw new Error(getAuthErrorMessage(error))
+    }
+  }, [])
+
   const signOut = useCallback(async () => {
     try {
       await firebaseSignOut(auth)
@@ -87,8 +100,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const value = useMemo(
-    () => ({ user, loading, signIn, signUp, signOut, resetPassword }),
-    [user, loading, signIn, signUp, signOut, resetPassword],
+    () => ({ user, loading, signIn, signUp, signInWithGoogle, signOut, resetPassword }),
+    [user, loading, signIn, signUp, signInWithGoogle, signOut, resetPassword],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

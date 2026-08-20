@@ -1,6 +1,7 @@
 import { type FormEvent, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { AuthButton } from '../components/auth/AuthButton'
+import { AuthDivider, GoogleSignInButton } from '../components/auth/GoogleSignInButton'
 import { AuthInput } from '../components/auth/AuthInput'
 import { AuthLayout } from '../components/auth/AuthLayout'
 import { PasswordInput } from '../components/auth/PasswordInput'
@@ -9,14 +10,28 @@ import { useAuth } from '../context/AuthContext'
 
 export function SignupPage() {
   const navigate = useNavigate()
-  const { signUp } = useAuth()
+  const { signUp, signInWithGoogle } = useAuth()
 
   const [displayName, setDisplayName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [loading, setLoading] = useState(false)
+  const [googleLoading, setGoogleLoading] = useState(false)
   const [error, setError] = useState('')
+
+  const handleGoogleSignIn = async () => {
+    setError('')
+    setGoogleLoading(true)
+    try {
+      await signInWithGoogle()
+      navigate(ROUTES.HOME)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Google sign-in failed.')
+    } finally {
+      setGoogleLoading(false)
+    }
+  }
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
@@ -55,13 +70,21 @@ export function SignupPage() {
       title="Create your account"
       subtitle="Join FoodHub and start ordering from top restaurants."
     >
-      <form onSubmit={handleSubmit} className="space-y-5">
-        {error && (
-          <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
-            {error}
-          </div>
-        )}
+      {error && (
+        <div className="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+          {error}
+        </div>
+      )}
 
+      <GoogleSignInButton
+        loading={googleLoading}
+        disabled={loading}
+        onClick={handleGoogleSignIn}
+      />
+
+      <AuthDivider />
+
+      <form onSubmit={handleSubmit} className="space-y-5">
         <AuthInput
           label="Full name"
           name="displayName"
@@ -100,7 +123,7 @@ export function SignupPage() {
           onChange={(e) => setConfirmPassword(e.target.value)}
         />
 
-        <AuthButton type="submit" loading={loading}>
+        <AuthButton type="submit" loading={loading} disabled={googleLoading}>
           Create account
         </AuthButton>
 

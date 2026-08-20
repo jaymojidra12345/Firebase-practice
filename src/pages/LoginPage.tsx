@@ -1,6 +1,7 @@
 import { type FormEvent, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { AuthButton } from '../components/auth/AuthButton'
+import { AuthDivider, GoogleSignInButton } from '../components/auth/GoogleSignInButton'
 import { AuthInput } from '../components/auth/AuthInput'
 import { AuthLayout } from '../components/auth/AuthLayout'
 import { PasswordInput } from '../components/auth/PasswordInput'
@@ -11,14 +12,28 @@ type LoginView = 'signin' | 'forgot'
 
 export function LoginPage() {
   const navigate = useNavigate()
-  const { signIn, resetPassword } = useAuth()
+  const { signIn, signInWithGoogle, resetPassword } = useAuth()
 
   const [view, setView] = useState<LoginView>('signin')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
+  const [googleLoading, setGoogleLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+
+  const handleGoogleSignIn = async () => {
+    setError('')
+    setGoogleLoading(true)
+    try {
+      await signInWithGoogle()
+      navigate(ROUTES.HOME)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Google sign-in failed.')
+    } finally {
+      setGoogleLoading(false)
+    }
+  }
 
   const handleSignIn = async (event: FormEvent) => {
     event.preventDefault()
@@ -116,13 +131,21 @@ export function LoginPage() {
 
   return (
     <AuthLayout title="Welcome back" subtitle="Sign in to continue ordering delicious food.">
-      <form onSubmit={handleSignIn} className="space-y-5">
-        {error && (
-          <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
-            {error}
-          </div>
-        )}
+      {error && (
+        <div className="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+          {error}
+        </div>
+      )}
 
+      <GoogleSignInButton
+        loading={googleLoading}
+        disabled={loading}
+        onClick={handleGoogleSignIn}
+      />
+
+      <AuthDivider />
+
+      <form onSubmit={handleSignIn} className="space-y-5">
         <AuthInput
           label="Email address"
           name="email"
@@ -156,7 +179,7 @@ export function LoginPage() {
           </div>
         </div>
 
-        <AuthButton type="submit" loading={loading}>
+        <AuthButton type="submit" loading={loading} disabled={googleLoading}>
           Sign in
         </AuthButton>
 
@@ -166,19 +189,6 @@ export function LoginPage() {
             Create one
           </Link>
         </p>
-
-        <div className="relative py-2">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-200" />
-          </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-gray-50 px-3 text-gray-400">Coming soon</span>
-          </div>
-        </div>
-
-        <AuthButton type="button" variant="secondary" disabled>
-          Continue with Google
-        </AuthButton>
       </form>
     </AuthLayout>
   )
