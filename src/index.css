@@ -8,6 +8,10 @@
   --color-brand-700: #c2410c;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   @apply m-0 min-h-screen bg-gray-50 text-gray-900 antialiased;
 }
