@@ -6,8 +6,10 @@ import { useAuth } from '../../context/AuthContext'
 const navLinks = [
   { label: 'Home', to: ROUTES.HOME },
   { label: 'Restaurants', to: ROUTES.RESTAURANTS },
-  { label: 'Features', to: `${ROUTES.HOME}#features` },
+  { label: 'Offers', to: `${ROUTES.HOME}#offers` },
+  { label: 'Cuisines', to: `${ROUTES.HOME}#cuisines` },
   { label: 'How it works', to: `${ROUTES.HOME}#how-it-works` },
+  { label: 'FAQ', to: `${ROUTES.HOME}#faq` },
 ]
 
 export function Header() {
