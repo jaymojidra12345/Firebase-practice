@@ -38,7 +38,7 @@ export function AuthLayout({ children, title, subtitle }: AuthLayoutProps) {
         </div>
 
         <p className="relative z-10 text-sm text-brand-100/80">
-          Firebase practice project — Phase 1 Authentication
+          FoodHub — Authentication
         </p>
       </aside>
 

@@ -39,7 +39,7 @@ export function Header() {
             </span>
             <div>
               <p className="text-lg font-bold tracking-tight text-gray-900">FoodHub</p>
-              <p className="text-xs font-medium text-gray-500">React + Firebase ordering app</p>
+              <p className="text-xs font-medium text-gray-500">Modern food ordering app</p>
             </div>
           </Link>
 

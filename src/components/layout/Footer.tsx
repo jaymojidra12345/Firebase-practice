@@ -29,7 +29,7 @@ export function Footer() {
           <div className="lg:col-span-1">
             <p className="text-lg font-bold tracking-tight text-gray-900">FoodHub</p>
             <p className="mt-3 max-w-xs text-sm leading-6 text-gray-500">
-              A React + Firebase food ordering platform for discovering restaurants, placing
+              A modern food ordering platform for discovering restaurants, placing
               orders, and growing into a full marketplace.
             </p>
           </div>
@@ -68,7 +68,7 @@ export function Footer() {
           </div>
         </div>
         <p className="mt-10 border-t border-gray-100 pt-6 text-sm text-gray-500">
-          FoodHub — Firebase practice project
+          FoodHub — Your food ordering platform
         </p>
       </div>
     </footer>

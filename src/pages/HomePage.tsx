@@ -17,7 +17,7 @@ const features = [
     tag: 'Experience',
   },
   {
-    title: 'Firebase-powered auth',
+    title: 'Secure authentication',
     description:
       'Email, Google sign-in, password reset, and scalable user identity management are already built in.',
     tag: 'Security',
@@ -25,7 +25,7 @@ const features = [
   {
     title: 'Real-time growth path',
     description:
-      'The project is structured for live order updates, storage uploads, dashboards, and Firestore-backed data.',
+      'The project is structured for live order updates, storage uploads, dashboards, and scalable data management.',
     tag: 'Scalability',
   },
   {
@@ -90,7 +90,7 @@ const highlights = [
   'Responsive layout for mobile, tablet, and desktop',
   'Strong hero messaging and conversion-focused CTAs',
   'Prepared for restaurant, cart, and dashboard features',
-  'Clean structure that matches the current React architecture',
+  'Clean structure for scalable application growth',
 ]
 
 const featuredRestaurants = [
@@ -242,7 +242,7 @@ const audiences = [
     title: 'For the platform team',
     description:
       'Grow from a practice app into a full marketplace with auth, data, and admin tools already planned.',
-    points: ['Firebase Authentication today', 'Firestore-ready restaurant data', 'Owner and admin dashboards next'],
+    points: ['Secure authentication today', 'Scalable restaurant data', 'Owner and admin dashboards next'],
   },
 ]
 
@@ -257,7 +257,7 @@ const promises = [
   },
   {
     title: 'Secure accounts',
-    description: 'Firebase Authentication protects sign-in with email, Google, and password recovery.',
+    description: 'Secure authentication protects sign-in with email, Google, and password recovery.',
   },
   {
     title: 'Support that scales',
@@ -291,7 +291,7 @@ const partnerBenefits = [
   },
   {
     title: 'Publish menus once',
-    description: 'Keep items, prices, photos, and availability in one kitchen profile as Firestore lands.',
+    description: 'Keep items, prices, photos, and availability in one kitchen profile.',
   },
   {
     title: 'Own the rush hour',
@@ -351,7 +351,7 @@ const faqs = [
   {
     question: 'How will orders be tracked?',
     answer:
-      'Order status will move from confirmed to cooking, on the way, and delivered, with room for live Firebase updates.',
+      'Order status will move from confirmed to cooking, on the way, and delivered, with room for live status updates.',
   },
   {
     question: 'Can restaurants join the platform?',
@@ -361,7 +361,7 @@ const faqs = [
   {
     question: 'What stack is FoodHub built on?',
     answer:
-      'React, Vite, Tailwind CSS, React Router, and Firebase Authentication — with Firestore and Storage planned next.',
+      'Modern web technologies with a focus on fast performance, responsive design, and secure authentication — with advanced features planned next.',
   },
   {
     question: 'Is the app mobile friendly?',
@@ -397,7 +397,7 @@ const testimonials = [
     name: 'Kabir',
     role: 'Frontend reviewer',
     quote:
-      'The UI communicates a premium app direction while staying practical for future Firebase features.',
+      'The UI communicates a premium app direction while staying practical for future features.',
   },
   {
     name: 'Meera',
@@ -446,7 +446,7 @@ export function HomePage() {
           <div className="grid gap-14 lg:min-h-[calc(100vh-9rem)] lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
             <div>
               <span className="inline-flex rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-brand-50 sm:text-sm">
-                Food ordering system built with React + Firebase
+                Modern food ordering system
               </span>
 
               <h1 className="mt-6 max-w-4xl text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-7xl lg:leading-[1.05]">
@@ -457,7 +457,7 @@ export function HomePage() {
               <p className="mt-6 max-w-2xl text-base leading-7 text-brand-50 sm:text-lg sm:leading-8 lg:text-xl">
                 FoodHub is a modern food ordering platform where users can sign in, explore
                 restaurants, place orders, and follow delivery status through a fast, responsive,
-                and scalable frontend powered by Firebase.
+                and scalable platform.
               </p>
 
               <div className="mt-8 flex flex-col gap-4 sm:flex-row">
@@ -577,14 +577,14 @@ export function HomePage() {
                       <p className="text-sm font-medium text-gray-300">Authentication</p>
                       <p className="mt-3 text-xl font-semibold">Email and Google sign-in</p>
                       <p className="mt-2 text-sm leading-6 text-gray-300">
-                        Built on Firebase Authentication with account recovery ready.
+                        Built with secure authentication and account recovery ready.
                       </p>
                     </div>
                     <div className="rounded-3xl bg-white p-5 ring-1 ring-gray-100 shadow-sm">
                       <p className="text-sm font-medium text-gray-500">Next product phase</p>
                       <p className="mt-3 text-xl font-semibold text-gray-900">Menus, carts, and dashboards</p>
                       <p className="mt-2 text-sm leading-6 text-gray-500">
-                        The current structure is prepared for Firestore-powered restaurant and order data.
+                        The current structure is prepared for scalable restaurant and order data.
                       </p>
                     </div>
                   </div>
@@ -705,7 +705,7 @@ export function HomePage() {
           </h2>
           <p className="mt-4 text-lg text-gray-600">
             Dish cards preview how menus, prices, and delivery times will sit together once kitchen
-            data is connected to Firestore.
+            data is connected to the platform.
           </p>
         </div>
 
@@ -740,7 +740,7 @@ export function HomePage() {
               A fuller restaurant lineup for the landing page.
             </h2>
             <p className="mt-4 text-lg text-gray-600">
-              These preview cards show how the marketplace will feel once Firestore restaurant data
+              These preview cards show how the marketplace will feel once restaurant data
               is connected — ratings, delivery time, and offers in one glance.
             </p>
           </div>
@@ -786,7 +786,7 @@ export function HomePage() {
             A bigger, smarter landing experience for a real food delivery product.
           </h2>
           <p className="mt-4 text-lg text-gray-600">
-            The project already combines authentication, routing, reusable UI, and Firebase
+            The project already combines authentication, routing, reusable UI, and secure
             integration so the next features can grow on a strong base.
           </p>
         </div>
