@@ -1,13 +1,27 @@
 export type UserRole = 'customer' | 'restaurant_owner' | 'admin'
 
+export const USER_ROLES = {
+  CUSTOMER: 'customer',
+  RESTAURANT_OWNER: 'restaurant_owner',
+  ADMIN: 'admin',
+} as const satisfies Record<string, UserRole>
+
+export const ROLE_LABELS: Record<UserRole, string> = {
+  customer: 'Customer',
+  restaurant_owner: 'Restaurant',
+  admin: 'Admin',
+}
+
 export interface UserProfile {
   uid: string
   email: string
   displayName: string
   role: UserRole
-  photoURL?: string
-  phone?: string
+  photoURL?: string | null
+  phone?: string | null
+  restaurantId?: string | null
   createdAt: Date
+  updatedAt: Date
 }
 
 export interface Restaurant {
@@ -17,10 +31,20 @@ export interface Restaurant {
   cuisine: string[]
   rating: number
   deliveryTime: string
-  logoUrl?: string
-  bannerUrl?: string
+  logoUrl?: string | null
+  bannerUrl?: string | null
   ownerId: string
   isActive: boolean
+  createdAt: Date
+  updatedAt: Date
+}
+
+export interface CreateRestaurantInput {
+  name: string
+  description: string
+  cuisine: string[]
+  deliveryTime: string
+  ownerId: string
 }
 
 export interface MenuItem {

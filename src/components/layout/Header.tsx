@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ROUTES } from '../../constants/routes'
 import { useAuth } from '../../context/AuthContext'
+import { ROLE_LABELS, USER_ROLES } from '../../types'
 
 const navLinks = [
   { label: 'Home', to: ROUTES.HOME },
@@ -13,7 +14,7 @@ const navLinks = [
 ]
 
 export function Header() {
-  const { user, loading, signOut } = useAuth()
+  const { user, profile, loading, signOut } = useAuth()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const handleSignOut = async () => {
@@ -60,9 +61,27 @@ export function Header() {
               <div className="h-11 w-28 animate-pulse rounded-full bg-gray-100" />
             ) : user ? (
               <>
-                <div className="rounded-full border border-gray-200 bg-white px-4 py-2 text-sm text-gray-600 shadow-sm">
-                  {user.displayName || user.email}
-                </div>
+                {profile?.role === USER_ROLES.ADMIN && (
+                  <Link
+                    to={ROUTES.ADMIN}
+                    className="rounded-full border border-brand-200 bg-brand-50 px-4 py-2 text-sm font-semibold text-brand-700 transition hover:bg-brand-100"
+                  >
+                    Admin
+                  </Link>
+                )}
+                <Link
+                  to={ROUTES.PROFILE}
+                  className="flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm text-gray-600 shadow-sm transition hover:border-brand-200 hover:text-brand-700"
+                >
+                  <span className="max-w-[140px] truncate">
+                    {profile?.displayName || user.displayName || user.email}
+                  </span>
+                  {profile && (
+                    <span className="rounded-full bg-brand-50 px-2 py-0.5 text-xs font-semibold text-brand-700">
+                      {ROLE_LABELS[profile.role]}
+                    </span>
+                  )}
+                </Link>
                 <button
                   type="button"
                   onClick={handleSignOut}
@@ -137,9 +156,27 @@ export function Header() {
                   <div className="h-11 w-full animate-pulse rounded-2xl bg-gray-100" />
                 ) : user ? (
                   <div className="grid gap-3">
-                    <div className="rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-600">
-                      {user.displayName || user.email}
-                    </div>
+                    {profile?.role === USER_ROLES.ADMIN && (
+                      <Link
+                        to={ROUTES.ADMIN}
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="inline-flex items-center justify-center rounded-2xl bg-brand-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-brand-700"
+                      >
+                        Admin panel
+                      </Link>
+                    )}
+                    <Link
+                      to={ROUTES.PROFILE}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-600"
+                    >
+                      <p>{profile?.displayName || user.displayName || user.email}</p>
+                      {profile && (
+                        <p className="mt-1 text-xs font-semibold text-brand-700">
+                          {ROLE_LABELS[profile.role]}
+                        </p>
+                      )}
+                    </Link>
                     <button
                       type="button"
                       onClick={handleSignOut}

@@ -1,0 +1,65 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isSelf(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function currentUser() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && currentUser().role == 'admin';
+    }
+
+    function isRestaurantOwner() {
+      return isSignedIn() && currentUser().role == 'restaurant_owner';
+    }
+
+    function ownsRestaurant(restaurantId) {
+      return isRestaurantOwner() && currentUser().restaurantId == restaurantId;
+    }
+
+    match /users/{userId} {
+      allow read: if isSelf(userId) || isAdmin();
+
+      allow create: if isSelf(userId)
+        && request.resource.data.uid == userId
+        && request.resource.data.role == 'customer'
+        && request.resource.data.keys().hasAll([
+          'uid', 'email', 'displayName', 'role', 'createdAt', 'updatedAt'
+        ]);
+
+      allow update: if isSelf(userId)
+        && request.resource.data.uid == resource.data.uid
+        && request.resource.data.role == resource.data.role
+        && request.resource.data.restaurantId == resource.data.restaurantId;
+
+      allow update: if isAdmin()
+        && request.resource.data.uid == resource.data.uid
+        && resource.data.role != 'admin'
+        && request.resource.data.role != 'admin'
+        && request.resource.data.role in ['customer', 'restaurant_owner'];
+
+      allow delete: if false;
+    }
+
+    match /restaurants/{restaurantId} {
+      allow read: if resource.data.isActive == true || isAdmin() || ownsRestaurant(restaurantId);
+
+      allow create: if isAdmin()
+        && request.resource.data.keys().hasAll([
+          'name', 'description', 'cuisine', 'rating', 'deliveryTime', 'ownerId', 'isActive'
+        ]);
+
+      allow update: if isAdmin() || ownsRestaurant(restaurantId);
+
+      allow delete: if isAdmin();
+    }
+  }
+}

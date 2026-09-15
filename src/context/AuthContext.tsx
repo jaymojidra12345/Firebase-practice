@@ -19,10 +19,14 @@ import {
   type ReactNode,
 } from 'react'
 import { auth } from '../config/firebase'
+import { ensureUserProfile } from '../services/users'
+import { USER_ROLES, type UserProfile, type UserRole } from '../types'
 import { getAuthErrorMessage } from '../utils/authErrors'
 
 interface AuthContextValue {
   user: User | null
+  profile: UserProfile | null
+  role: UserRole | null
   loading: boolean
   signIn: (email: string, password: string) => Promise<void>
   signUp: (email: string, password: string, displayName: string) => Promise<void>
@@ -37,15 +41,48 @@ const AuthContext = createContext<AuthContextValue | null>(null)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
+  const [profile, setProfile] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser)
-      setLoading(false)
+    let cancelled = false
+
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (!currentUser) {
+        if (!cancelled) {
+          setUser(null)
+          setProfile(null)
+          setLoading(false)
+        }
+        return
+      }
+
+      if (!cancelled) {
+        setLoading(true)
+        setUser(currentUser)
+      }
+
+      try {
+        const userProfile = await ensureUserProfile(currentUser)
+        if (!cancelled) {
+          setProfile(userProfile)
+        }
+      } catch (error) {
+        console.error('Failed to load user profile', error)
+        if (!cancelled) {
+          setProfile(null)
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false)
+        }
+      }
     })
 
-    return unsubscribe
+    return () => {
+      cancelled = true
+      unsubscribe()
+    }
   }, [])
 
   const signIn = useCallback(async (email: string, password: string) => {
@@ -67,7 +104,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         await updateProfile(credential.user, {
           displayName: displayName.trim(),
         })
-        setUser({ ...credential.user, displayName: displayName.trim() })
+        await ensureUserProfile(credential.user)
       } catch (error) {
         throw new Error(getAuthErrorMessage(error))
       }
@@ -100,8 +137,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const value = useMemo(
-    () => ({ user, loading, signIn, signUp, signInWithGoogle, signOut, resetPassword }),
-    [user, loading, signIn, signUp, signInWithGoogle, signOut, resetPassword],
+    () => ({
+      user,
+      profile,
+      role: profile?.role ?? null,
+      loading,
+      signIn,
+      signUp,
+      signInWithGoogle,
+      signOut,
+      resetPassword,
+    }),
+    [user, profile, loading, signIn, signUp, signInWithGoogle, signOut, resetPassword],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
@@ -113,4 +160,13 @@ export function useAuth() {
     throw new Error('useAuth must be used within AuthProvider')
   }
   return context
+}
+
+export function useHasRole(...roles: UserRole[]) {
+  const { role } = useAuth()
+  return role !== null && roles.includes(role)
+}
+
+export function useIsAdmin() {
+  return useHasRole(USER_ROLES.ADMIN)
 }
